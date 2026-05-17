@@ -1,0 +1,1776 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chianti PGA Tour Pool</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --green: #1a5c2e;
+  --green-light: #2d8a4a;
+  --green-pale: #e8f5ec;
+  --gold: #c9a84c;
+  --gold-light: #f0d080;
+  --red: #c0392b;
+  --gray-dark: #1a1a1a;
+  --gray: #444;
+  --gray-mid: #888;
+  --gray-light: #ddd;
+  --gray-pale: #f5f5f3;
+  --white: #fff;
+  --bg: #f9f8f4;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--bg);
+  color: var(--gray-dark);
+  min-height: 100vh;
+}
+
+/* HEADER */
+.site-header {
+  background: var(--green);
+  color: var(--white);
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 64px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.18);
+}
+.site-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 28px;
+  letter-spacing: 2px;
+  color: var(--gold-light);
+}
+.site-subtitle {
+  font-size: 11px;
+  color: rgba(255,255,255,0.6);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin-top: 1px;
+}
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.commissioner-btn {
+  background: rgba(255,255,255,0.12);
+  border: 1px solid rgba(255,255,255,0.25);
+  color: var(--white);
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-family: 'DM Sans', sans-serif;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.commissioner-btn:hover { background: rgba(255,255,255,0.22); }
+.commissioner-btn.active { background: var(--gold); color: var(--green); border-color: var(--gold); font-weight: 600; }
+
+/* MAJOR SELECTOR */
+.major-bar {
+  background: var(--green-pale);
+  border-bottom: 2px solid #c5dfc8;
+  display: flex;
+  gap: 0;
+  overflow-x: auto;
+  padding: 0 16px;
+}
+.major-tab {
+  padding: 12px 20px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: var(--gray-mid);
+  cursor: pointer;
+  border-bottom: 3px solid transparent;
+  white-space: nowrap;
+  transition: all 0.15s;
+  background: none;
+  border-top: none;
+  border-left: none;
+  border-right: none;
+  font-family: 'DM Sans', sans-serif;
+}
+.major-tab:hover { color: var(--green); }
+.major-tab.active { color: var(--green); border-bottom-color: var(--green); }
+.major-tab .major-status {
+  display: inline-block;
+  margin-left: 6px;
+  font-size: 9px;
+  padding: 1px 5px;
+  border-radius: 8px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+.status-live { background: #e8f5ec; color: var(--green-light); }
+.status-upcoming { background: #f0f0f0; color: var(--gray-mid); }
+.status-complete { background: #fff3cd; color: #856404; }
+
+/* MAIN LAYOUT */
+.main { max-width: 1100px; margin: 0 auto; padding: 24px 16px; }
+
+/* PURSE BAR */
+.purse-bar {
+  background: var(--green);
+  color: var(--white);
+  border-radius: 10px;
+  padding: 14px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.purse-label { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: rgba(255,255,255,0.6); }
+.purse-amount { font-family: 'Bebas Neue', sans-serif; font-size: 26px; color: var(--gold-light); letter-spacing: 1px; }
+.purse-meta { font-size: 12px; color: rgba(255,255,255,0.5); }
+.round-indicator { display: flex; gap: 6px; align-items: center; }
+.round-dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: rgba(255,255,255,0.2);
+}
+.round-dot.done { background: var(--gold); }
+.round-dot.active { background: #5dfc82; box-shadow: 0 0 6px #5dfc82; }
+
+/* LEADERBOARD */
+.section-label {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 18px;
+  letter-spacing: 2px;
+  color: var(--green);
+  margin-bottom: 10px;
+  margin-top: 24px;
+}
+.leaderboard-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0 4px;
+}
+.leaderboard-table thead th {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--gray-mid);
+  font-weight: 600;
+  padding: 4px 12px;
+  text-align: left;
+}
+.leaderboard-table thead th.right { text-align: right; }
+.lb-row {
+  background: var(--white);
+  border-radius: 8px;
+  transition: box-shadow 0.15s;
+  cursor: pointer;
+}
+.lb-row:hover { box-shadow: 0 2px 12px rgba(0,0,0,0.08); }
+.lb-row td {
+  padding: 12px 12px;
+  vertical-align: middle;
+}
+.lb-row td:first-child { border-radius: 8px 0 0 8px; }
+.lb-row td:last-child { border-radius: 0 8px 8px 0; }
+.lb-rank {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 22px;
+  color: var(--gray-mid);
+  width: 40px;
+}
+.lb-rank.top { color: var(--gold); }
+.lb-name {
+  font-weight: 600;
+  font-size: 15px;
+}
+.lb-score {
+  font-family: 'DM Mono', monospace;
+  font-size: 14px;
+  font-weight: 500;
+  text-align: right;
+}
+.lb-score.under { color: var(--red); }
+.lb-score.over { color: var(--gray); }
+.lb-score.even { color: var(--gray-dark); }
+.lb-earnings {
+  font-family: 'DM Mono', monospace;
+  font-size: 13px;
+  color: var(--green-light);
+  font-weight: 500;
+  text-align: right;
+}
+.lb-team-golfers {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-top: 4px;
+}
+.golfer-chip {
+  font-size: 10px;
+  padding: 2px 7px;
+  border-radius: 10px;
+  font-weight: 500;
+  letter-spacing: 0.3px;
+}
+.chip-a { background: #fff3cd; color: #856404; }
+.chip-b { background: #e8f5ec; color: var(--green); }
+.chip-c { background: #e8f0ff; color: #4040b0; }
+.chip-mc { background: #f5f5f5; color: #aaa; text-decoration: line-through; }
+.lb-row.expanded { box-shadow: 0 2px 16px rgba(0,0,0,0.1); }
+
+/* GOLFER DETAIL EXPAND */
+.golfer-detail {
+  background: var(--gray-pale);
+  border-radius: 0 0 8px 8px;
+  padding: 12px 16px;
+  display: none;
+}
+.golfer-detail.open { display: block; }
+.golfer-detail-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 8px;
+}
+.golfer-detail-item {
+  background: var(--white);
+  border-radius: 8px;
+  padding: 8px 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 13px;
+}
+.golfer-detail-item .gname { font-weight: 500; }
+.golfer-detail-item .gscore {
+  font-family: 'DM Mono', monospace;
+  font-size: 12px;
+}
+.gscore.under { color: var(--red); }
+.gscore.even { color: var(--gray-dark); }
+.gscore.over { color: var(--gray-mid); }
+.gscore.mc { color: #bbb; }
+
+/* COMMISSIONER PANEL */
+.comm-panel {
+  background: var(--white);
+  border: 2px solid var(--gold);
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 24px;
+  display: none;
+}
+.comm-panel.open { display: block; }
+.comm-panel-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 20px;
+  letter-spacing: 2px;
+  color: var(--green);
+  margin-bottom: 14px;
+}
+.comm-tabs { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
+.comm-tab {
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1.5px solid var(--gray-light);
+  background: var(--white);
+  color: var(--gray);
+  font-family: 'DM Sans', sans-serif;
+  transition: all 0.15s;
+}
+.comm-tab.active { background: var(--green); color: var(--white); border-color: var(--green); }
+
+.score-entry-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 8px;
+  max-height: 400px;
+  overflow-y: auto;
+}
+.score-entry-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--gray-pale);
+  border-radius: 8px;
+  padding: 8px 10px;
+}
+.score-entry-name {
+  flex: 1;
+  font-size: 13px;
+  font-weight: 500;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.score-entry-input {
+  width: 60px;
+  padding: 4px 6px;
+  border: 1.5px solid var(--gray-light);
+  border-radius: 6px;
+  font-family: 'DM Mono', monospace;
+  font-size: 13px;
+  text-align: center;
+  background: var(--white);
+}
+.score-entry-input:focus { border-color: var(--green); outline: none; }
+.mc-toggle {
+  padding: 3px 7px;
+  border-radius: 6px;
+  font-size: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1.5px solid var(--gray-light);
+  background: var(--white);
+  color: var(--gray-mid);
+  font-family: 'DM Sans', sans-serif;
+}
+.mc-toggle.mc { background: #fee; color: var(--red); border-color: var(--red); }
+.comm-save-btn {
+  margin-top: 14px;
+  background: var(--green);
+  color: var(--white);
+  border: none;
+  padding: 10px 24px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: 'DM Sans', sans-serif;
+  transition: background 0.15s;
+}
+.comm-save-btn:hover { background: var(--green-light); }
+
+/* PURSE EDIT */
+.purse-edit-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 10px;
+  flex-wrap: wrap;
+}
+.purse-input {
+  padding: 6px 12px;
+  border: 1.5px solid var(--gray-light);
+  border-radius: 6px;
+  font-family: 'DM Mono', monospace;
+  font-size: 14px;
+  width: 160px;
+}
+.purse-input:focus { border-color: var(--green); outline: none; }
+
+/* LOCK MODAL */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+  z-index: 200;
+  display: none;
+  align-items: center;
+  justify-content: center;
+}
+.modal-overlay.open { display: flex; }
+.modal {
+  background: var(--white);
+  border-radius: 14px;
+  padding: 28px;
+  max-width: 360px;
+  width: 90%;
+  box-shadow: 0 8px 40px rgba(0,0,0,0.2);
+}
+.modal-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 22px;
+  letter-spacing: 1px;
+  color: var(--green);
+  margin-bottom: 8px;
+}
+.modal-desc { font-size: 13px; color: var(--gray-mid); margin-bottom: 16px; }
+.modal-input {
+  width: 100%;
+  padding: 10px 14px;
+  border: 2px solid var(--gray-light);
+  border-radius: 8px;
+  font-size: 16px;
+  margin-bottom: 12px;
+  font-family: 'DM Mono', monospace;
+  letter-spacing: 3px;
+}
+.modal-input:focus { border-color: var(--green); outline: none; }
+.modal-btns { display: flex; gap: 8px; }
+.modal-btn {
+  flex: 1;
+  padding: 10px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: 'DM Sans', sans-serif;
+  border: none;
+}
+.modal-btn.primary { background: var(--green); color: var(--white); }
+.modal-btn.secondary { background: var(--gray-light); color: var(--gray); }
+.modal-error { color: var(--red); font-size: 12px; margin-top: -8px; margin-bottom: 8px; }
+
+/* TOAST */
+.toast {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: var(--green);
+  color: var(--white);
+  padding: 12px 20px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  z-index: 300;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: all 0.3s;
+  pointer-events: none;
+}
+.toast.show { opacity: 1; transform: translateY(0); }
+
+/* FIELD VIEW */
+.field-toggle-bar {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+.field-toggle {
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1.5px solid var(--gray-light);
+  background: var(--white);
+  color: var(--gray);
+  font-family: 'DM Sans', sans-serif;
+}
+.field-toggle.active { background: var(--green); color: var(--white); border-color: var(--green); }
+.field-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 6px;
+}
+.field-item {
+  background: var(--white);
+  border-radius: 8px;
+  padding: 8px 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 13px;
+}
+.field-item .odds { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--gray-mid); }
+.group-header {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 16px;
+  letter-spacing: 2px;
+  padding: 8px 0 4px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.group-badge {
+  font-size: 10px;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+.badge-a { background: #fff3cd; color: #856404; }
+.badge-b { background: #e8f5ec; color: var(--green); }
+.badge-c { background: #e8f0ff; color: #4040b0; }
+
+/* TABS */
+.view-tabs { display: flex; gap: 0; border-bottom: 2px solid var(--gray-light); margin-bottom: 20px; }
+.view-tab {
+  padding: 10px 18px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--gray-mid);
+  cursor: pointer;
+  border-bottom: 3px solid transparent;
+  margin-bottom: -2px;
+  background: none;
+  border-top: none;
+  border-left: none;
+  border-right: none;
+  font-family: 'DM Sans', sans-serif;
+  transition: all 0.15s;
+}
+.view-tab:hover { color: var(--green); }
+.view-tab.active { color: var(--green); border-bottom-color: var(--green); }
+
+.view-panel { display: none; }
+.view-panel.active { display: block; }
+
+/* RESPONSIVE */
+@media (max-width: 600px) {
+  .site-title { font-size: 20px; }
+  .major-tab { padding: 10px 14px; font-size: 11px; }
+  .purse-amount { font-size: 20px; }
+  .lb-earnings { display: table-cell; }
+  .lb-score { font-size: 11px; color: var(--gray-mid) !important; }
+}
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div>
+    <div class="site-title">⛳ Chianti PGA Pool</div>
+    <div class="site-subtitle">Fantasy Golf · 4 Majors · 2026</div>
+  </div>
+  <div class="header-right">
+    <button class="commissioner-btn" onclick="showPinModal()">🔐 Commissioner</button>
+  </div>
+</header>
+
+<div class="major-bar">
+  <button class="major-tab" onclick="selectMajor('masters')" id="tab-masters">
+    The Masters <span class="major-status status-complete">Done</span>
+  </button>
+  <button class="major-tab" onclick="selectMajor('pga')" id="tab-pga">
+    PGA Championship <span class="major-status status-live">Live</span>
+  </button>
+  <button class="major-tab" onclick="selectMajor('us_open')" id="tab-us_open">
+    US Open <span class="major-status status-upcoming">Upcoming</span>
+  </button>
+  <button class="major-tab" onclick="selectMajor('open')" id="tab-open">
+    The Open <span class="major-status status-upcoming">Upcoming</span>
+  </button>
+</div>
+
+<div class="main">
+
+  <!-- Commissioner Panel -->
+  <div class="comm-panel" id="commPanel">
+    <div class="comm-panel-title">⚙ Commissioner Panel</div>
+    <div class="comm-tabs">
+      <button class="comm-tab active" onclick="switchCommTab('scores')">Enter Scores</button>
+      <button class="comm-tab" onclick="switchCommTab('picks')">Edit Picks</button>
+      <button class="comm-tab" onclick="switchCommTab('purse')">Set Purse</button>
+    </div>
+    <div id="commScores">
+      <p style="font-size:12px;color:var(--gray-mid);margin-bottom:10px;">Enter score to par (e.g. -5, +2, E). Toggle MC for missed cut.</p>
+      <div class="score-entry-grid" id="scoreEntryGrid"></div>
+      <button class="comm-save-btn" onclick="saveScores()">Save Scores</button>
+    </div>
+    <div id="commPicksEditor" style="display:none">
+      <p style="font-size:12px;color:var(--gray-mid);margin-bottom:10px;">Edit any participant's picks. Changes apply immediately.</p>
+      <div style="margin-bottom:12px;display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+        <label style="font-size:13px;font-weight:600">Participant:</label>
+        <select id="pickEditorSelect" onchange="loadPickEditor()" style="padding:6px 10px;border:1.5px solid var(--gray-light);border-radius:6px;font-family:'DM Sans',sans-serif;font-size:13px"></select>
+      </div>
+      <div id="pickEditorGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:8px"></div>
+      <button class="comm-save-btn" onclick="savePickEdits()" style="margin-top:14px">Save Picks</button>
+    </div>
+    <div id="commPurse" style="display:none">
+      <div class="purse-edit-row">
+        <label style="font-size:13px;font-weight:600;">Total Purse ($)</label>
+        <input type="number" class="purse-input" id="purseInput" placeholder="20000000">
+        <button class="comm-save-btn" onclick="savePurse()">Update Purse</button>
+      </div>
+      <p style="font-size:11px;color:var(--gray-mid)">PGA Championship purse locked at $20,500,000 from official source. Exact per-position payouts applied with tie-splitting. MC players earn $4,300. For other majors, amounts scale proportionally.</p>
+    </div>
+  </div>
+
+  <!-- Purse Bar -->
+  <div class="purse-bar">
+    <div>
+      <div class="purse-label">Total Purse</div>
+      <div class="purse-amount" id="purseDisplay">$20,500,000</div>
+    </div>
+    <div style="text-align:center">
+      <div class="purse-label">Round</div>
+      <div class="round-indicator" id="roundDots">
+        <div class="round-dot" id="rd1"></div>
+        <div class="round-dot" id="rd2"></div>
+        <div class="round-dot" id="rd3"></div>
+        <div class="round-dot" id="rd4"></div>
+      </div>
+    </div>
+    <div style="text-align:right">
+      <div class="purse-label">Status</div>
+      <div id="majorStatusDisplay" style="font-size:13px;font-weight:600;color:var(--gold-light)">Round 4 In Progress</div>
+      <div id="liveSync" style="display:flex;align-items:center;gap:5px;justify-content:flex-end;margin-top:4px">
+        <span id="liveDot" style="width:7px;height:7px;border-radius:50%;background:var(--gray-mid);display:inline-block;transition:background 0.5s"></span>
+        <span id="liveLabel" style="font-size:10px;color:rgba(255,255,255,0.45);letter-spacing:0.5px">Connecting...</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- View Tabs -->
+  <div class="view-tabs">
+    <button class="view-tab active" onclick="switchView('leaderboard')">🏆 Leaderboard</button>
+    <button class="view-tab" onclick="switchView('season')">🗓 Season</button>
+    <button class="view-tab" onclick="switchView('field')">📋 Field</button>
+    <button class="view-tab" onclick="switchView('picks')">🎯 All Picks</button>
+  </div>
+
+  <!-- SEASON VIEW -->
+  <div class="view-panel" id="view-season">
+    <div class="section-label">Season Standings — All Majors</div>
+    <table class="leaderboard-table">
+      <thead>
+        <tr>
+          <th style="width:40px">#</th>
+          <th>Participant</th>
+          <th class="right" style="font-size:10px">Masters</th>
+          <th class="right" style="font-size:10px">PGA</th>
+          <th class="right" style="font-size:10px">US Open</th>
+          <th class="right" style="font-size:10px">The Open</th>
+          <th class="right">Total</th>
+        </tr>
+      </thead>
+      <tbody id="seasonBody"></tbody>
+    </table>
+  </div>
+
+  <!-- LEADERBOARD VIEW -->
+  <div class="view-panel active" id="view-leaderboard">
+    <div class="section-label">Team Standings</div>
+    <table class="leaderboard-table">
+      <thead>
+        <tr>
+          <th style="width:40px">#</th>
+          <th>Participant</th>
+          <th class="right">Est. Earnings</th>
+          <th class="right">Score</th>
+        </tr>
+      </thead>
+      <tbody id="leaderboardBody"></tbody>
+    </table>
+  </div>
+
+  <!-- FIELD VIEW -->
+  <div class="view-panel" id="view-field">
+    <div class="field-toggle-bar">
+      <span style="font-size:12px;font-weight:600;color:var(--gray-mid);text-transform:uppercase;letter-spacing:1px">Show:</span>
+      <button class="field-toggle active" onclick="filterField('all')">All</button>
+      <button class="field-toggle" onclick="filterField('A')">Group A</button>
+      <button class="field-toggle" onclick="filterField('B')">Group B</button>
+      <button class="field-toggle" onclick="filterField('C')">Group C</button>
+    </div>
+    <div id="fieldDisplay"></div>
+  </div>
+
+  <!-- PICKS VIEW -->
+  <div class="view-panel" id="view-picks">
+    <div class="section-label">All Picks</div>
+    <div id="picksGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px;"></div>
+  </div>
+
+</div>
+
+<!-- PIN MODAL -->
+<div class="modal-overlay" id="pinModal">
+  <div class="modal">
+    <div class="modal-title">Commissioner Login</div>
+    <div class="modal-desc">Enter your PIN to access the commissioner panel.</div>
+    <input type="password" class="modal-input" id="pinInput" placeholder="••••" maxlength="6">
+    <div class="modal-error" id="pinError" style="display:none">Incorrect PIN. Try again.</div>
+    <div class="modal-btns">
+      <button class="modal-btn secondary" onclick="closePinModal()">Cancel</button>
+      <button class="modal-btn primary" onclick="checkPin()">Enter</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ============================================================
+// DATA
+// ============================================================
+
+const COMMISSIONER_PIN = "6969"; // change this!
+
+// 2026 PGA Championship official payout table — exact dollar amounts per position (1-82)
+// Source: pgachampionship.com — positions beyond 82 get MC_PAY
+const PAYOUT_DOLLARS = [
+  3690000, 2214000, 1394000, 984000, 820000,
+  727600,  681050,  636400,  593700, 553000,
+  514160,  477300,  442370,  409390, 378340,
+  349240,  322080,  296850,  273570, 252230,
+  232830,  215370,  199840,  187230, 175110,
+  163460,  152310,  141640,  131450, 121750,
+  113990,  107200,  101380,   96530,  92650,
+   88960,   85370,   81880,   78480,  75180,
+   71980,   68880,   65870,   62960,  60150,
+   57430,   54810,   52290,   49860,  47540,
+   45300,   43170,   41130,   39190,  37350,
+   35600,   33950,   32600,   31430,  30460,
+   29690,   29120,   28640,   28180,  27740,
+   27310,   26890,   26480,   26080,  25690,
+   25360,   25040,   24730,   24530,  24370,
+   24230,   24130,   24040,   23970,  23930,
+   23910,   23900
+];
+const MC_PAY = 4300; // official missed cut payment
+
+// Golf field from the sheet
+const FIELD = {
+  A: [
+    { name: "Scottie Scheffler", odds: "3/1" },
+    { name: "Rory McIlroy", odds: "8/1" },
+    { name: "Jon Rahm", odds: "13/1" },
+    { name: "Cameron Young", odds: "15/1" },
+    { name: "Bryson DeChambeau", odds: "17/1" },
+    { name: "Xander Schauffele", odds: "19/1" },
+    { name: "Matt Fitzpatrick", odds: "20/1" },
+    { name: "Ludvig Aberg", odds: "20/1" },
+    { name: "Tommy Fleetwood", odds: "26/1" },
+    { name: "Collin Morikawa", odds: "36/1" },
+    { name: "Brooks Koepka", odds: "39/1" },
+    { name: "Justin Rose", odds: "43/1" },
+  ],
+  B: [
+    { name: "Russell Henley", odds: "47/1" },
+    { name: "Si Woo Kim", odds: "47/1" },
+    { name: "Justin Thomas", odds: "48/1" },
+    { name: "Robert MacIntyre", odds: "53/1" },
+    { name: "Adam Scott", odds: "54/1" },
+    { name: "Patrick Cantlay", odds: "54/1" },
+    { name: "Tyrrell Hatton", odds: "55/1" },
+    { name: "Jordan Spieth", odds: "59/1" },
+    { name: "Sam Burns", odds: "60/1" },
+    { name: "Hideki Matsuyama", odds: "62/1" },
+    { name: "Adam Scott", odds: "64/1" },
+    { name: "Rickie Fowler", odds: "70/1" },
+    { name: "Chris Gotterup", odds: "74/1" },
+    { name: "Patrick Reed", odds: "74/1" },
+    { name: "Min Woo Lee", odds: "78/1" },
+    { name: "Ben Griffin", odds: "80/1" },
+    { name: "Sepp Straka", odds: "84/1" },
+    { name: "Shane Lowry", odds: "90/1" },
+    { name: "Akshay Bhatia", odds: "94/1" },
+    { name: "Maverick McNealy", odds: "94/1" },
+    { name: "Jake Knapp", odds: "94/1" },
+    { name: "Joaquin Niemann", odds: "94/1" },
+    { name: "Jason Day", odds: "96/1" },
+  ],
+  C: [
+    { name: "J.J. Spaun", odds: "100/1" },
+    { name: "Kurt Kitayama", odds: "100/1" },
+    { name: "Harris English", odds: "105/1" },
+    { name: "Nicolai Hojgaard", odds: "110/1" },
+    { name: "Gary Woodland", odds: "110/1" },
+    { name: "David Puig", odds: "110/1" },
+    { name: "Jacob Bridgeman", odds: "120/1" },
+    { name: "Michael Thorbjornsen", odds: "120/1" },
+    { name: "Keegan Bradley", odds: "125/1" },
+    { name: "Corey Conners", odds: "140/1" },
+    { name: "Kristoffer Reitan", odds: "145/1" },
+    { name: "Alex Fitzpatrick", odds: "150/1" },
+    { name: "Sudarshan Yellamaraju", odds: "150/1" },
+    { name: "Harry Hall", odds: "155/1" },
+    { name: "Sungjae Im", odds: "155/1" },
+    { name: "Alexander Noren", odds: "160/1" },
+    { name: "Sahith Theegala", odds: "160/1" },
+    { name: "Thomas Detry", odds: "165/1" },
+    { name: "Marco Penge", odds: "170/1" },
+    { name: "Sam Stevens", odds: "175/1" },
+    { name: "Wyndham Clark", odds: "175/1" },
+    { name: "Alex Smalley", odds: "175/1" },
+    { name: "Keith Mitchell", odds: "175/1" },
+    { name: "Daniel Berger", odds: "185/1" },
+    { name: "Ryan Gerard", odds: "200/1" },
+    { name: "Nick Taylor", odds: "200/1" },
+    { name: "Rasmus Hojgaard", odds: "210/1" },
+    { name: "Dustin Johnson", odds: "210/1" },
+    { name: "Pierceson Coody", odds: "230/1" },
+    { name: "Aaron Rai", odds: "240/1" },
+    { name: "Jordan L. Smith", odds: "240/1" },
+    { name: "Angel Ayora Fanegas", odds: "240/1" },
+    { name: "Bud Cauley", odds: "250/1" },
+    { name: "Brandt Snedeker", odds: "250/1" },
+    { name: "Matthew McCarty", odds: "260/1" },
+    { name: "Jayden Trey Schaper", odds: "260/1" },
+    { name: "Brian Harman", odds: "270/1" },
+    { name: "Ryan Fox", odds: "270/1" },
+    { name: "J.T. Poston", odds: "270/1" },
+    { name: "Taylor Pendrith", odds: "270/1" },
+    { name: "Michael Kim", odds: "290/1" },
+    { name: "Ryo Hisatsune", odds: "290/1" },
+    { name: "Denny McCarthy", odds: "290/1" },
+    { name: "Max Homa", odds: "290/1" },
+    { name: "Cameron Smith", odds: "290/1" },
+    { name: "Tom McKibbin", odds: "300/1" },
+    { name: "Rico Hoey", odds: "320/1" },
+    { name: "Matt Wallace", odds: "325/1" },
+    { name: "Hao-Tong Li", odds: "330/1" },
+    { name: "Ricky Castillo", odds: "330/1" },
+    { name: "Michael Brennan", odds: "350/1" },
+    { name: "Max Greyserman", odds: "360/1" },
+    { name: "Christiaan Bezuidenhout", odds: "375/1" },
+    { name: "Stephan Jaeger", odds: "375/1" },
+    { name: "Smus Neergaard-Petersen", odds: "390/1" },
+    { name: "Aldrich Potgieter", odds: "400/1" },
+    { name: "Andrew Novak", odds: "420/1" },
+    { name: "Patrick Rodgers", odds: "430/1" },
+    { name: "Daniel Hillier", odds: "430/1" },
+    { name: "Max McGreevy", odds: "460/1" },
+    { name: "Chris Kirk", odds: "480/1" },
+    { name: "Billy Horschel", odds: "480/1" },
+    { name: "Casey Jarvis", odds: "490/1" },
+    { name: "Ian Holt", odds: "490/1" },
+    { name: "John Parry", odds: "500/1" },
+    { name: "William Mouw", odds: "500/1" },
+    { name: "Steven Fisk", odds: "500/1" },
+    { name: "Nicolas Echavarria", odds: "525/1" },
+    { name: "Garrick Higgo", odds: "525/1" },
+    { name: "John Keefer", odds: "550/1" },
+    { name: "Austin Smotherman", odds: "575/1" },
+    { name: "Matthias Schmid", odds: "575/1" },
+    { name: "Sami Valimaki", odds: "600/1" },
+    { name: "Andrew Putnam", odds: "600/1" },
+    { name: "Lucas Glover", odds: "625/1" },
+    { name: "Daniel Brown", odds: "625/1" },
+    { name: "Jhonattan Vegas", odds: "750/1" },
+    { name: "Emiliano Grillo", odds: "800/1" },
+    { name: "Mikael Lindberg", odds: "850/1" },
+    { name: "Adrien Saddier", odds: "1000/1" },
+    { name: "Bernd Wiesberger", odds: "1000/1" },
+    { name: "Elvis Smylie", odds: "1100/1" },
+    { name: "Kota Kaneko", odds: "1300/1" },
+    { name: "Stewart Cink", odds: "1300/1" },
+    { name: "David Lipsky", odds: "1500/1" },
+    { name: "Andy Sullivan", odds: "1500/1" },
+    { name: "Chandler Blanchet", odds: "1500/1" },
+    { name: "Joe Highsmith", odds: "1800/1" },
+    { name: "Travis Smyth", odds: "2000/1" },
+    { name: "Adam Schenk", odds: "2000/1" },
+    { name: "Davis Riley", odds: "2250/1" },
+    { name: "Brian Campbell", odds: "4000/1" },
+    { name: "Martin Kaymer", odds: "4000/1" },
+    { name: "Kazuki Higa", odds: "4500/1" },
+    { name: "Padraig Harrington", odds: "4500/1" },
+    { name: "Jordan Gumberg", odds: "4500/1" },
+    { name: "Jason Dufner", odds: "5000/1" },
+    { name: "Shaun Micheel", odds: "5000/1" },
+    { name: "Jimmy Walker", odds: "5000/1" },
+    { name: "Luke Donald", odds: "5000/1" },
+    { name: "Y.E. Yang", odds: "5000/1" },
+    { name: "Austin Hurt", odds: "5000/1" },
+    { name: "Ben Kern", odds: "5000/1" },
+    { name: "Ben Polland", odds: "5000/1" },
+    { name: "Braden Shattuck", odds: "5000/1" },
+    { name: "Bryce Fisher", odds: "5000/1" },
+    { name: "Chris Gabriele", odds: "5000/1" },
+    { name: "Derek Berg", odds: "5000/1" },
+    { name: "Francisco Bide", odds: "5000/1" },
+    { name: "Garrett Sapp", odds: "5000/1" },
+    { name: "Jared Jones", odds: "5000/1" },
+    { name: "Jesse Droemer", odds: "5000/1" },
+    { name: "Mark Geddes", odds: "5000/1" },
+    { name: "Michael Block", odds: "5000/1" },
+    { name: "Michael Kartrude", odds: "5000/1" },
+    { name: "Paul McClure", odds: "5000/1" },
+    { name: "Ryan Lenahan", odds: "5000/1" },
+    { name: "Ryan Vermeer", odds: "5000/1" },
+    { name: "Timothy Wiseman", odds: "5000/1" },
+    { name: "Tyler Collet", odds: "5000/1" },
+    { name: "Zach Haynes", odds: "5000/1" },
+  ]
+};
+
+// Participants and picks from the photos
+const PARTICIPANTS = {
+  "Allie":    { A: ["Scottie Scheffler","Rory McIlroy"], B: ["Justin Thomas","Robert MacIntyre"], C: ["J.J. Spaun","Harris English"] },
+  "Jess":     { A: ["Scottie Scheffler","Bryson DeChambeau"], B: ["Si Woo Kim","Shane Lowry"], C: ["Gary Woodland","Wyndham Clark"] },
+  "Ben":      { A: ["Scottie Scheffler","Rory McIlroy"], B: ["Chris Gotterup","Rickie Fowler"], C: ["J.J. Spaun","Corey Conners"] },
+  "Janet":    { A: ["Scottie Scheffler","Rory McIlroy"], B: ["Justin Thomas","Viktor Hovland"], C: ["J.J. Spaun","Nicolai Hojgaard"] },
+  "Drew":     { A: ["Scottie Scheffler","Justin Rose"], B: ["Jordan Spieth","Chris Gotterup"], C: ["Kristoffer Reitan","Alex Fitzpatrick"] },
+  "Justin":   { A: ["Scottie Scheffler","Cameron Young"], B: ["Si Woo Kim","Robert MacIntyre"], C: ["Gary Woodland","Sahith Theegala"] },
+  "Sam":      { A: ["Scottie Scheffler","Cameron Young"], B: ["Sam Burns","Hideki Matsuyama"], C: ["Sungjae Im","Nicolai Hojgaard"] },
+  "Kevin C.": { A: ["Scottie Scheffler","Rory McIlroy"], B: ["Justin Thomas","Russell Henley"], C: ["Sungjae Im","Sahith Theegala"] },
+  "Greg D.":  { A: ["Scottie Scheffler","Cameron Young"], B: ["Tyrrell Hatton","Robert MacIntyre"], C: ["Kurt Kitayama","Alexander Noren"] },
+  "Laurylee": { A: ["Scottie Scheffler","Rory McIlroy"], B: ["Hideki Matsuyama","Viktor Hovland"], C: ["Nicolai Hojgaard","Jacob Bridgeman"] },
+  "Jim":      { A: ["Scottie Scheffler","Ludvig Aberg"], B: ["Si Woo Kim","Chris Gotterup"], C: ["J.J. Spaun","Michael Thorbjornsen"] },
+  "Kari":     { A: ["Matt Fitzpatrick","Justin Rose"], B: ["Rickie Fowler","Russell Henley"], C: ["Harris English","Tyrrell Hatton"] },
+  "Brent":    { A: ["Cameron Young","Xander Schauffele"], B: ["Tyrrell Hatton","Chris Gotterup"], C: ["J.J. Spaun","Wyndham Clark"] },
+  "Chad":     { A: ["Scottie Scheffler","Cameron Young"], B: ["Rickie Fowler","Akshay Bhatia"], C: ["J.J. Spaun","Sahith Theegala"] },
+  "Brina":    { A: ["Scottie Scheffler","Rory McIlroy"], B: ["Hideki Matsuyama","Viktor Hovland"], C: ["Gary Woodland","Sungjae Im"] },
+};
+
+// Majors config — purses locked from official sources where known
+const MAJORS = {
+  masters:  { name: "The Masters",        purse: 20000000, status: "complete", round: 4, dates: "Apr 9–12",  start: "2026-04-09", end: "2026-04-12" },
+  pga:      { name: "PGA Championship",   purse: 20500000, status: "live",     round: 4, dates: "May 14–17", start: "2026-05-14", end: "2026-05-18" },
+  us_open:  { name: "US Open",            purse: 21500000, status: "upcoming", round: 0, dates: "Jun 18–21", start: "2026-06-18", end: "2026-06-21" },
+  open:     { name: "The Open",           purse: 17000000, status: "upcoming", round: 0, dates: "Jul 16–19", start: "2026-07-16", end: "2026-07-19" },
+};
+
+// Auto-select the most relevant major based on today's date
+// Logic: if today is within a major's window → that major
+//        if between majors → most recently completed
+//        if before all majors → first one
+function getDefaultMajor() {
+  const today = new Date().toISOString().slice(0, 10); // "YYYY-MM-DD"
+  const keys = ['masters', 'pga', 'us_open', 'open'];
+  // Check if today falls within a tournament window (add 1 day buffer after end)
+  for (const key of keys) {
+    const m = MAJORS[key];
+    if (today >= m.start && today <= m.end) return key;
+  }
+  // Find most recently completed major
+  let lastCompleted = null;
+  for (const key of keys) {
+    if (today > MAJORS[key].end) lastCompleted = key;
+  }
+  if (lastCompleted) return lastCompleted;
+  // Before all majors — return first
+  return 'masters';
+}
+
+// Scores: { golferName: { score: number|null, mc: bool } }
+// Scores start empty — populated entirely by live ESPN sync
+// Commissioner can manually override any player via the panel if needed
+let SCORES = {
+  pga:     {},
+  masters: {},
+  us_open: {},
+  open:    {}
+};
+
+let currentMajor = getDefaultMajor();
+let isCommissioner = false;
+let currentFieldFilter = 'all';
+let currentCommTab = 'scores';
+
+// ============================================================
+// SCORING ENGINE
+// ============================================================
+
+function calcEarnings(scores, purse) {
+  // Build sorted leaderboard of active (non-MC, scored) players
+  const active = Object.entries(scores)
+    .filter(([, s]) => !s.mc && s.score !== null)
+    .sort((a, b) => a[1].score - b[1].score);
+
+  const earningsMap = {};
+
+  // For PGA Championship use the exact payout table; for other majors scale by purse ratio
+  const pgaPurse = 20500000;
+  const scale = purse / pgaPurse;
+
+  let i = 0;
+  while (i < active.length) {
+    // Find tie group
+    let j = i;
+    while (j < active.length && active[j][1].score === active[i][1].score) j++;
+    // Average the exact dollar slots for the tied positions, then scale if needed
+    let totalDollars = 0;
+    for (let k = i; k < j; k++) {
+      totalDollars += (PAYOUT_DOLLARS[k] || PAYOUT_DOLLARS[PAYOUT_DOLLARS.length - 1]);
+    }
+    const avgEarning = Math.round((totalDollars / (j - i)) * scale);
+    for (let k = i; k < j; k++) {
+      earningsMap[active[k][0]] = avgEarning;
+    }
+    i = j;
+  }
+
+  // MC players earn $0 — no consolation payment in group scoring
+  Object.entries(scores).forEach(([name, s]) => {
+    if (s.mc) earningsMap[name] = 0;
+    if (s.score === null && !earningsMap[name]) earningsMap[name] = null;
+  });
+
+  return earningsMap;
+}
+
+function getTeamStats(participant) {
+  const picks = PARTICIPANTS[participant];
+  const allPicks = [...picks.A, ...picks.B, ...picks.C];
+  const purse = MAJORS[currentMajor].purse;
+
+  const earningsMap = calcEarnings(SCORES[currentMajor] || {}, purse);
+
+  let totalScore = 0;
+  let totalEarnings = 0;
+  let hasAnyScore = false;
+
+  const golferStats = allPicks.map(name => {
+    const s = (SCORES[currentMajor] || {})[name] || { score: null, mc: false };
+    const earnings = earningsMap[name] ?? null;
+    const group = picks.A.includes(name) ? 'A' : picks.B.includes(name) ? 'B' : 'C';
+    if (s.mc) {
+      hasAnyScore = true;
+      // MC players do NOT contribute to team score
+    } else if (s.score !== null) {
+      totalScore += s.score;
+      hasAnyScore = true;
+    }
+    if (earnings !== null) totalEarnings += earnings;
+    return { name, score: s.score, mc: s.mc, earnings, group };
+  });
+
+  return {
+    totalScore: hasAnyScore ? totalScore : null,
+    totalEarnings,
+    golfers: golferStats
+  };
+}
+
+// ============================================================
+// RENDER LEADERBOARD
+// ============================================================
+
+function renderLeaderboard() {
+  const tbody = document.getElementById('leaderboardBody');
+  tbody.innerHTML = '';
+
+  const teams = Object.keys(PARTICIPANTS).map(name => ({
+    name,
+    ...getTeamStats(name)
+  }));
+
+  // Sort: by earnings if any, else by score
+  teams.sort((a, b) => {
+    if (b.totalEarnings !== a.totalEarnings) return b.totalEarnings - a.totalEarnings;
+    if (a.totalScore === null && b.totalScore === null) return 0;
+    if (a.totalScore === null) return 1;
+    if (b.totalScore === null) return -1;
+    return a.totalScore - b.totalScore;
+  });
+
+  teams.forEach((team, idx) => {
+    const rank = idx + 1;
+    const scoreStr = team.totalScore === null ? '--' :
+      team.totalScore === 0 ? 'E' :
+      team.totalScore > 0 ? '+' + team.totalScore : '' + team.totalScore;
+    const scoreClass = team.totalScore === null ? '' :
+      team.totalScore < 0 ? 'under' : team.totalScore > 0 ? 'over' : 'even';
+    const earningsStr = team.totalEarnings > 0 ?
+      '$' + (team.totalEarnings / 1000000).toFixed(3) + 'M' : '--';
+
+    const rowId = 'row-' + team.name.replace(/\s/g,'_');
+    const detailId = 'detail-' + team.name.replace(/\s/g,'_');
+
+    // Chips
+    // Build set of all last names in this team to detect duplicates
+    const allLastNames = team.golfers.map(g => g.name.split(' ').slice(-1)[0]);
+    const lastNameCount = {};
+    allLastNames.forEach(n => lastNameCount[n] = (lastNameCount[n] || 0) + 1);
+    const chips = team.golfers.map(g => {
+      const chipClass = g.mc ? 'chip-mc' : ('chip-' + g.group.toLowerCase());
+      const parts = g.name.split(' ');
+      const lastName = parts.slice(-1)[0];
+      // Show first initial if duplicate last name exists in pool field
+      const isDup = Object.keys(FIELD).some(grp =>
+        FIELD[grp].filter(p => p.name.split(' ').slice(-1)[0] === lastName).length > 1
+      );
+      const label = isDup ? parts[0][0] + '. ' + lastName : lastName;
+      return `<span class="golfer-chip ${chipClass}">${label}</span>`;
+    }).join('');
+
+    // Detail row golfers
+    const detailItems = team.golfers.map(g => {
+      const sc = g.mc ? 'MC' : g.score === null ? '--' : g.score === 0 ? 'E' : g.score > 0 ? '+'+g.score : ''+g.score;
+      const scClass = g.mc ? 'mc' : g.score === null ? '' : g.score < 0 ? 'under' : g.score > 0 ? 'over' : 'even';
+      const earn = g.earnings !== null && g.earnings > 0 ? ' · $'+(g.earnings/1000000).toFixed(3)+'M' : '';
+      const chipClass = 'chip-' + g.group.toLowerCase();
+      return `<div class="golfer-detail-item">
+        <span class="gname"><span class="golfer-chip ${chipClass}">${g.group}</span> ${g.name}</span>
+        <span class="gscore ${scClass}">${sc}${earn}</span>
+      </div>`;
+    }).join('');
+
+    const tr = document.createElement('tr');
+    tr.className = 'lb-row';
+    tr.id = rowId;
+    tr.onclick = () => toggleDetail(detailId, rowId);
+    tr.innerHTML = `
+      <td class="lb-rank ${rank <= 3 ? 'top' : ''}">${rank}</td>
+      <td>
+        <div class="lb-name">${team.name}</div>
+        <div class="lb-team-golfers">${chips}</div>
+      </td>
+      <td class="lb-earnings">${earningsStr}</td>
+      <td class="lb-score ${scoreClass}">${scoreStr}</td>
+    `;
+    tbody.appendChild(tr);
+
+    // Detail expansion row
+    const detailTr = document.createElement('tr');
+    detailTr.innerHTML = `<td colspan="4" style="padding:0">
+      <div class="golfer-detail" id="${detailId}">
+        <div class="golfer-detail-grid">${detailItems}</div>
+      </div>
+    </td>`;
+    tbody.appendChild(detailTr);
+  });
+}
+
+function toggleDetail(detailId, rowId) {
+  const detail = document.getElementById(detailId);
+  const row = document.getElementById(rowId);
+  const isOpen = detail.classList.contains('open');
+  // Close all
+  document.querySelectorAll('.golfer-detail').forEach(d => d.classList.remove('open'));
+  document.querySelectorAll('.lb-row').forEach(r => r.classList.remove('expanded'));
+  if (!isOpen) {
+    detail.classList.add('open');
+    row.classList.add('expanded');
+  }
+}
+
+// ============================================================
+// FIELD VIEW
+// ============================================================
+
+function renderField() {
+  const display = document.getElementById('fieldDisplay');
+  display.innerHTML = '';
+  const groups = currentFieldFilter === 'all' ? ['A','B','C'] : [currentFieldFilter];
+  const scoreMap = SCORES[currentMajor] || {};
+  const labels = { A: 'Pick 2', B: 'Pick 2', C: 'Pick 2' };
+
+  groups.forEach(g => {
+    const header = document.createElement('div');
+    header.className = 'group-header';
+    header.innerHTML = `Group ${g} <span class="group-badge badge-${g.toLowerCase()}">${labels[g]}</span>`;
+    display.appendChild(header);
+
+    const grid = document.createElement('div');
+    grid.className = 'field-grid';
+    FIELD[g].forEach(player => {
+      const s = scoreMap[player.name] || { score: null, mc: false };
+      const sc = s.mc ? 'MC' : s.score === null ? '—' : s.score === 0 ? 'E' : s.score > 0 ? '+'+s.score : ''+s.score;
+      const scColor = s.mc ? '#bbb' : s.score === null ? '#bbb' : s.score < 0 ? 'var(--red)' : s.score > 0 ? 'var(--gray-mid)' : 'var(--gray-dark)';
+      const item = document.createElement('div');
+      item.className = 'field-item';
+      item.style.opacity = s.mc ? '0.5' : '1';
+      item.innerHTML = `
+        <span style="font-weight:500;font-size:13px;${s.mc?'text-decoration:line-through;color:#aaa':''}">${player.name}</span>
+        <span style="display:flex;flex-direction:column;align-items:flex-end;gap:2px">
+          <span style="font-family:'DM Mono',monospace;font-size:12px;color:${scColor}">${sc}</span>
+          <span class="odds">${player.odds}</span>
+        </span>`;
+      grid.appendChild(item);
+    });
+    display.appendChild(grid);
+  });
+}
+
+function filterField(f) {
+  currentFieldFilter = f;
+  document.querySelectorAll('.field-toggle').forEach(b => b.classList.remove('active'));
+  event.target.classList.add('active');
+  renderField();
+}
+
+// ============================================================
+// PICKS VIEW
+// ============================================================
+
+function renderPicks() {
+  const grid = document.getElementById('picksGrid');
+  grid.innerHTML = '';
+  const scoreMap = SCORES[currentMajor] || {};
+
+  Object.entries(PARTICIPANTS).forEach(([name, picks]) => {
+    const card = document.createElement('div');
+    card.style.cssText = 'background:var(--white);border-radius:12px;padding:14px;box-shadow:0 1px 4px rgba(0,0,0,0.06)';
+    const allPicks = [
+      ...picks.A.map(n => ({n,g:'A'})),
+      ...picks.B.map(n => ({n,g:'B'})),
+      ...picks.C.map(n => ({n,g:'C'})),
+    ];
+    const rows = allPicks.map(({n,g}) => {
+      const s = scoreMap[n] || { score: null, mc: false };
+      const sc = s.mc ? 'MC' : s.score === null ? '--' : s.score === 0 ? 'E' : s.score > 0 ? '+'+s.score : ''+s.score;
+      const scColor = s.mc ? '#bbb' : s.score === null ? 'var(--gray-mid)' : s.score < 0 ? 'var(--red)' : s.score > 0 ? 'var(--gray-mid)' : 'var(--gray-dark)';
+      return `<div style="display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid var(--gray-pale)">
+        <span style="display:flex;align-items:center;gap:6px">
+          <span class="golfer-chip chip-${g.toLowerCase()}">${g}</span>
+          <span style="font-size:13px;${s.mc?'text-decoration:line-through;color:#aaa':''}">${n}</span>
+        </span>
+        <span style="font-family:'DM Mono',monospace;font-size:12px;color:${scColor}">${sc}</span>
+      </div>`;
+    }).join('');
+    card.innerHTML = `<div style="font-weight:700;font-size:15px;margin-bottom:8px;color:var(--green)">${name}</div>${rows}`;
+    grid.appendChild(card);
+  });
+}
+
+// ============================================================
+// COMMISSIONER
+// ============================================================
+
+function renderScoreEntry() {
+  const grid = document.getElementById('scoreEntryGrid');
+  grid.innerHTML = '';
+  const scoreMap = SCORES[currentMajor] || {};
+  const allPlayers = [...FIELD.A, ...FIELD.B, ...FIELD.C];
+  // Only show players who are actually picked
+  const pickedNames = new Set();
+  Object.values(PARTICIPANTS).forEach(p => {
+    [...p.A, ...p.B, ...p.C].forEach(n => pickedNames.add(n));
+  });
+
+  allPlayers.filter(p => pickedNames.has(p.name)).forEach(player => {
+    const s = scoreMap[player.name] || { score: null, mc: false };
+    const val = s.score !== null ? (s.score === 0 ? 'E' : (s.score > 0 ? '+'+s.score : ''+s.score)) : '';
+    const item = document.createElement('div');
+    item.className = 'score-entry-item';
+    item.innerHTML = `
+      <span class="score-entry-name" title="${player.name}">${player.name}</span>
+      <input type="text" class="score-entry-input" id="si-${CSS.escape(player.name)}" value="${val}" placeholder="E">
+      <button class="mc-toggle ${s.mc?'mc':''}" id="mc-${CSS.escape(player.name)}" onclick="toggleMC('${player.name.replace(/'/g,"\\'")}', this)">${s.mc?'MC':'MC'}</button>`;
+    grid.appendChild(item);
+  });
+}
+
+function toggleMC(name, btn) {
+  btn.classList.toggle('mc');
+}
+
+function saveScores() {
+  if (!SCORES[currentMajor]) SCORES[currentMajor] = {};
+  if (!manualOverrides[currentMajor]) manualOverrides[currentMajor] = {};
+  const pickedNames = new Set();
+  Object.values(PARTICIPANTS).forEach(p => {
+    [...p.A, ...p.B, ...p.C].forEach(n => pickedNames.add(n));
+  });
+
+  pickedNames.forEach(name => {
+    const inputEl = document.getElementById('si-' + CSS.escape(name));
+    const mcEl = document.getElementById('mc-' + CSS.escape(name));
+    if (!inputEl) return;
+    const mc = mcEl ? mcEl.classList.contains('mc') : false;
+    const raw = inputEl.value.trim().toUpperCase();
+    let score = null;
+    if (raw === 'E' || raw === '0') score = 0;
+    else if (raw !== '') {
+      const n = parseInt(raw.replace('+',''));
+      if (!isNaN(n)) score = n;
+    }
+    SCORES[currentMajor][name] = { score, mc };
+    // Lock this player from live sync overwriting
+    if (raw !== '') manualOverrides[currentMajor][name] = true;
+  });
+
+  renderLeaderboard();
+  renderField();
+  renderPicks();
+  showToast('Scores saved & locked from live sync');
+}
+
+function savePurse() {
+  const val = parseInt(document.getElementById('purseInput').value);
+  if (!isNaN(val) && val > 0) {
+    MAJORS[currentMajor].purse = val;
+    document.getElementById('purseDisplay').textContent = '$' + val.toLocaleString();
+    renderLeaderboard();
+    showToast('Purse updated!');
+  }
+}
+
+function switchCommTab(tab) {
+  currentCommTab = tab;
+  document.querySelectorAll('.comm-tab').forEach(b => b.classList.remove('active'));
+  event.target.classList.add('active');
+  document.getElementById('commScores').style.display = tab === 'scores' ? '' : 'none';
+  document.getElementById('commPurse').style.display = tab === 'purse' ? '' : 'none';
+  document.getElementById('commPicksEditor').style.display = tab === 'picks' ? '' : 'none';
+  if (tab === 'picks') loadPickEditor();
+}
+
+function loadPickEditor() {
+  // Populate dropdown if empty
+  const select = document.getElementById('pickEditorSelect');
+  if (select.options.length === 0) {
+    Object.keys(PARTICIPANTS).forEach(n => {
+      const opt = document.createElement('option');
+      opt.value = n;
+      opt.textContent = n;
+      select.appendChild(opt);
+    });
+  }
+  const participant = select.value;
+  if (!participant) return;
+  const picks = PARTICIPANTS[participant];
+  const grid = document.getElementById('pickEditorGrid');
+  const groups = [
+    { label: 'Group A — Pick 2 (Favorites)', key: 'A', field: FIELD.A },
+    { label: 'Group B — Pick 2 (Mid)', key: 'B', field: FIELD.B },
+    { label: 'Group C — Pick 2 (Long shots)', key: 'C', field: FIELD.C },
+  ];
+  grid.innerHTML = groups.map(g => `
+    <div style="background:var(--gray-pale);border-radius:8px;padding:12px">
+      <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--gray-mid);margin-bottom:8px">${g.label}</div>
+      ${[0,1].map(i => `
+        <div style="margin-bottom:6px">
+          <select id="pick-${g.key}-${i}" style="width:100%;padding:6px 8px;border:1.5px solid var(--gray-light);border-radius:6px;font-family:'DM Sans',sans-serif;font-size:12px">
+            ${g.field.map(p => `<option value="${p.name}" ${picks[g.key][i] === p.name ? 'selected' : ''}>${p.name} (${p.odds})</option>`).join('')}
+          </select>
+        </div>`).join('')}
+    </div>`).join('');
+}
+
+function savePickEdits() {
+  const participant = document.getElementById('pickEditorSelect').value;
+  PARTICIPANTS[participant] = {
+    A: [
+      document.getElementById('pick-A-0').value,
+      document.getElementById('pick-A-1').value,
+    ],
+    B: [
+      document.getElementById('pick-B-0').value,
+      document.getElementById('pick-B-1').value,
+    ],
+    C: [
+      document.getElementById('pick-C-0').value,
+      document.getElementById('pick-C-1').value,
+    ],
+  };
+  renderLeaderboard();
+  renderField();
+  renderPicks();
+  showToast(`${participant}'s picks updated!`);
+}
+
+// ============================================================
+// MAJOR SELECTOR
+// ============================================================
+
+function updateRoundDots(m) {
+  for (let i = 1; i <= 4; i++) {
+    const dot = document.getElementById('rd' + i);
+    if (!dot) continue;
+    dot.className = 'round-dot';
+    if (m.status === 'upcoming') {
+      // no dots active
+    } else if (m.status === 'complete') {
+      dot.classList.add('done');
+    } else {
+      // live
+      if (i < m.round) dot.classList.add('done');
+      else if (i === m.round) dot.classList.add('active');
+    }
+  }
+}
+
+function selectMajor(major) {
+  currentMajor = major;
+  document.querySelectorAll('.major-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('tab-'+major).classList.add('active');
+  const m = MAJORS[major];
+  document.getElementById('purseDisplay').textContent = '$' + m.purse.toLocaleString();
+  const statusText = m.status === 'live' ? 'Round ' + m.round + ' In Progress'
+    : m.status === 'complete' ? 'Final'
+    : 'Upcoming · ' + m.dates;
+  document.getElementById('majorStatusDisplay').textContent = statusText;
+  updateRoundDots(m);
+  // Update tab badges dynamically
+  document.querySelectorAll('.major-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('tab-' + major).classList.add('active');
+  renderLeaderboard();
+  renderField();
+  renderPicks();
+  if (isCommissioner) renderScoreEntry();
+  // Restart live sync for the new major
+  if (liveEnabled) {
+    if (liveRefreshTimer) clearInterval(liveRefreshTimer);
+    consecutiveFails = 0;
+    fetchLiveScores();
+    liveRefreshTimer = setInterval(fetchLiveScores, 180000);
+  }
+}
+
+// ============================================================
+// VIEW TABS
+// ============================================================
+
+function switchView(view) {
+  document.querySelectorAll('.view-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.view-panel').forEach(p => p.classList.remove('active'));
+  event.target.classList.add('active');
+  document.getElementById('view-'+view).classList.add('active');
+  if (view === 'season') renderSeason();
+}
+
+function renderSeason() {
+  const tbody = document.getElementById('seasonBody');
+  tbody.innerHTML = '';
+  const majorKeys = ['masters','pga','us_open','open'];
+
+  // Calculate earnings per participant per major
+  const seasonData = Object.keys(PARTICIPANTS).map(name => {
+    let totalEarnings = 0;
+    const majorEarnings = {};
+    majorKeys.forEach(m => {
+      const picks = PARTICIPANTS[name];
+      const allPicks = [...picks.A, ...picks.B, ...picks.C];
+      const earningsMap = calcEarnings(SCORES[m] || {}, MAJORS[m].purse);
+      let earned = 0;
+      allPicks.forEach(p => { earned += earningsMap[p] || 0; });
+      majorEarnings[m] = earned;
+      totalEarnings += earned;
+    });
+    return { name, majorEarnings, totalEarnings };
+  });
+
+  // Sort by total earnings
+  seasonData.sort((a,b) => b.totalEarnings - a.totalEarnings);
+
+  seasonData.forEach((team, idx) => {
+    const rank = idx + 1;
+    const fmtM = (v) => v > 0 ? '$' + (v/1000000).toFixed(2) + 'M' : '--';
+    const tr = document.createElement('tr');
+    tr.className = 'lb-row';
+    tr.innerHTML = `
+      <td class="lb-rank ${rank <= 3 ? 'top' : ''}">${rank}</td>
+      <td><div class="lb-name">${team.name}</div></td>
+      <td class="lb-earnings" style="font-size:12px">${fmtM(team.majorEarnings.masters)}</td>
+      <td class="lb-earnings" style="font-size:12px">${fmtM(team.majorEarnings.pga)}</td>
+      <td class="lb-earnings" style="font-size:12px">${fmtM(team.majorEarnings.us_open)}</td>
+      <td class="lb-earnings" style="font-size:12px">${fmtM(team.majorEarnings.open)}</td>
+      <td class="lb-earnings" style="font-size:14px;font-weight:700">${fmtM(team.totalEarnings)}</td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+// ============================================================
+// PIN / COMMISSIONER
+// ============================================================
+
+function showPinModal() {
+  if (isCommissioner) {
+    // Toggle off
+    isCommissioner = false;
+    document.getElementById('commPanel').classList.remove('open');
+    document.querySelector('.commissioner-btn').classList.remove('active');
+    document.querySelector('.commissioner-btn').textContent = '🔐 Commissioner';
+    return;
+  }
+  document.getElementById('pinModal').classList.add('open');
+  document.getElementById('pinInput').value = '';
+  document.getElementById('pinError').style.display = 'none';
+  setTimeout(() => document.getElementById('pinInput').focus(), 100);
+}
+
+function closePinModal() {
+  document.getElementById('pinModal').classList.remove('open');
+}
+
+function checkPin() {
+  const pin = document.getElementById('pinInput').value;
+  if (pin === COMMISSIONER_PIN) {
+    isCommissioner = true;
+    closePinModal();
+    document.getElementById('commPanel').classList.add('open');
+    document.querySelector('.commissioner-btn').classList.add('active');
+    document.querySelector('.commissioner-btn').textContent = '✓ Commissioner';
+    renderScoreEntry();
+    loadPickEditor();
+    document.getElementById('purseInput').value = MAJORS[currentMajor].purse;
+    showToast('Welcome, Commissioner!');
+  } else {
+    document.getElementById('pinError').style.display = 'block';
+    document.getElementById('pinInput').value = '';
+    document.getElementById('pinInput').focus();
+  }
+}
+
+document.getElementById('pinInput').addEventListener('keydown', e => {
+  if (e.key === 'Enter') checkPin();
+});
+
+// ============================================================
+// TOAST
+// ============================================================
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+// ============================================================
+// LIVE SCORING ENGINE
+// ============================================================
+
+// ESPN event IDs for each major (2026 season) — confirmed from ESPN API calendar
+const ESPN_EVENT_IDS = {
+  masters: '401811941',   // 2026 Masters Tournament ✓ confirmed
+  pga:     '401811947',   // 2026 PGA Championship ✓ confirmed
+  us_open: '401811952',   // 2026 US Open — Shinnecock Hills, June 18-21 ✓ confirmed
+  open:    '401811957',   // 2026 The Open — Royal Portrush, July 16-19 ✓ confirmed
+};
+
+// Name normalization — ESPN spellings sometimes differ slightly
+const NAME_MAP = {
+  'Ludvig Åberg':         'Ludvig Aberg',
+  'Haotong Li':           'Hao-Tong Li',
+  'Matti Schmid':         'Matthias Schmid',
+  'Christiaan Bezuidenhout': 'Christiaan Bezuidenhout',
+  'Samus Neergaard-Petersen': 'Smus Neergaard-Petersen',
+  'Alex Noren':           'Alexander Noren',
+  'Victor Hovland':       'Viktor Hovland',
+  'Alex Fitzpatrick':     'Alex Fitzpatrick',
+};
+
+function normalizeName(name) {
+  return NAME_MAP[name] || name;
+}
+
+// Parse ESPN's to-par string into integer: "-5" → -5, "E" → 0, "+3" → 3
+function parseEspnScore(str) {
+  if (!str || str === '-' || str === '') return null;
+  const s = str.trim().toUpperCase();
+  if (s === 'E') return 0;
+  const n = parseInt(s.replace('+', ''));
+  return isNaN(n) ? null : n;
+}
+
+let liveRefreshTimer = null;
+let liveEnabled = false;
+let lastFetchTime = null;
+let consecutiveFails = 0;
+let manualOverrides = {}; // commissioner-set scores take priority
+
+// The CORS proxy — allorigins wraps the request server-side
+// buildUrl replaced by buildUrls() above
+
+// Cache of last successful scores per major
+const lastGoodScores = { pga: {}, masters: {}, us_open: {}, open: {} };
+
+// Two proxy options for redundancy
+function buildUrls(eventId) {
+  const espnUrl = `https://site.api.espn.com/apis/site/v2/sports/golf/pga/scoreboard?event=${eventId}&limit=200`;
+  return [
+    `https://api.allorigins.win/get?url=${encodeURIComponent(espnUrl)}`,
+    `https://corsproxy.io/?url=${encodeURIComponent(espnUrl)}`,
+  ];
+}
+
+async function tryFetch(url, timeoutMs) {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), timeoutMs);
+  try {
+    const res = await fetch(url, { cache: 'no-store', signal: controller.signal });
+    clearTimeout(timer);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    return await res.json();
+  } catch(e) {
+    clearTimeout(timer);
+    throw e;
+  }
+}
+
+function parseCompetitors(competitors, major) {
+  const updated = {};
+  competitors.forEach(c => {
+    const rawName = c.athlete?.displayName || c.athlete?.fullName || '';
+    const name = normalizeName(rawName);
+    if (!name) return;
+    if (manualOverrides[major]?.[name]) return;
+
+    // MC detection — check multiple fields ESPN uses
+    const statusId   = String(c.status?.type?.id || '');
+    const statusName = (c.status?.type?.name || '').toUpperCase();
+    const displayVal = (c.status?.displayValue || '').toUpperCase();
+    const isMC = statusId === '6'
+      || statusName.includes('CUT')
+      || statusName === 'WD'
+      || displayVal === 'CUT'
+      || displayVal.includes('MISSED CUT')
+      || displayVal === 'WD';
+
+    // Score: try c.score first, then statistics array, then linescores
+    let scoreStr = c.score || '';
+    if (!scoreStr || scoreStr === '--') {
+      // Try statistics array (ESPN sometimes puts total score here)
+      const stats = c.statistics || [];
+      const totalStat = stats.find(s => s.name === 'scoreToPar' || s.name === 'total');
+      if (totalStat) scoreStr = totalStat.displayValue || '';
+    }
+    if (!scoreStr || scoreStr === '--') {
+      if (c.linescores?.length) {
+        const total = c.linescores.reduce((sum, r) => {
+          const v = parseInt(r.value);
+          return sum + (isNaN(v) ? 0 : v);
+        }, 0);
+        scoreStr = total === 0 ? 'E' : String(total);
+      }
+    }
+
+    const score = isMC ? null : parseEspnScore(scoreStr);
+    updated[name] = { score, mc: isMC };
+  });
+  return updated;
+}
+
+async function fetchLiveScores() {
+  const major = currentMajor;
+  const eventId = ESPN_EVENT_IDS[major];
+
+  if (MAJORS[major].status === 'upcoming') {
+    setLiveStatus('upcoming', 'No data yet');
+    return;
+  }
+
+  setLiveStatus('fetching', 'Syncing...');
+
+  const urls = buildUrls(eventId);
+  let lastErr = null;
+
+  for (const url of urls) {
+    try {
+      const wrapper = await tryFetch(url, 10000);
+
+      // allorigins wraps in .contents; corsproxy returns data directly
+      let data;
+      if (wrapper.contents) {
+        data = JSON.parse(wrapper.contents);
+      } else if (wrapper.events) {
+        data = wrapper;
+      } else {
+        throw new Error('Unknown proxy format');
+      }
+
+      const competitions = data?.events?.[0]?.competitions;
+      if (!competitions?.length) throw new Error('No competition data');
+      const competitors = competitions[0].competitors || [];
+      if (!competitors.length) throw new Error('No competitors');
+
+      const updated = parseCompetitors(competitors, major);
+      if (Object.keys(updated).length === 0) throw new Error('No players parsed');
+
+      // Success — merge and cache
+      if (!SCORES[major]) SCORES[major] = {};
+      Object.entries(updated).forEach(([name, s]) => {
+        SCORES[major][name] = s;
+        lastGoodScores[major][name] = s; // cache for fallback
+      });
+
+      consecutiveFails = 0;
+      lastFetchTime = new Date();
+      const timeStr = lastFetchTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      setLiveStatus('live', `Live · ${timeStr}`);
+
+      renderLeaderboard();
+      renderField();
+      renderPicks();
+      if (isCommissioner) renderScoreEntry();
+      return; // success — stop trying proxies
+
+    } catch(err) {
+      lastErr = err;
+      console.warn(`Fetch failed (${url.includes('allorigins') ? 'allorigins' : 'corsproxy'}):`, err.message);
+    }
+  }
+
+  // All proxies failed — restore last good scores as fallback
+  consecutiveFails++;
+  if (Object.keys(lastGoodScores[major]).length > 0) {
+    if (!SCORES[major]) SCORES[major] = {};
+    Object.entries(lastGoodScores[major]).forEach(([name, s]) => {
+      if (!manualOverrides[major]?.[name]) SCORES[major][name] = s;
+    });
+  }
+
+  const timeStr = lastFetchTime
+    ? lastFetchTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+    : '--';
+
+  if (consecutiveFails >= 3) {
+    setLiveStatus('error', `Using last sync · ${timeStr}`);
+  } else {
+    setLiveStatus('stale', `Last: ${timeStr}`);
+  }
+
+  renderLeaderboard();
+  renderField();
+}
+
+function setLiveStatus(state, label) {
+  const dot = document.getElementById('liveDot');
+  const lbl = document.getElementById('liveLabel');
+  if (!dot || !lbl) return;
+  lbl.textContent = label;
+  const colors = {
+    live:     '#5dfc82',
+    fetching: '#f0d080',
+    stale:    '#f0a040',
+    error:    '#fc5d5d',
+    upcoming: 'var(--gray-mid)',
+    offline:  'var(--gray-mid)',
+  };
+  dot.style.background = colors[state] || 'var(--gray-mid)';
+  // Pulse animation for live state
+  dot.style.animation = state === 'live' ? 'livePulse 2s infinite' : 'none';
+}
+
+function startLiveSync() {
+  if (liveRefreshTimer) clearInterval(liveRefreshTimer);
+  liveEnabled = true;
+  fetchLiveScores(); // immediate first fetch
+  liveRefreshTimer = setInterval(fetchLiveScores, 180000); // every 3 minutes
+}
+
+function stopLiveSync() {
+  if (liveRefreshTimer) clearInterval(liveRefreshTimer);
+  liveEnabled = false;
+  setLiveStatus('offline', 'Paused');
+}
+
+// NOTE: selectMajor and saveScores are defined earlier in the file.
+// The live sync engine patches them via the _liveSyncPatch object below,
+// called at the end of those functions using a hook pattern.
+
+// Add pulse keyframe dynamically
+const styleEl = document.createElement('style');
+styleEl.textContent = `
+@keyframes livePulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(0.85); }
+}`;
+document.head.appendChild(styleEl);
+
+// ============================================================
+// INIT
+// ============================================================
+
+// Set correct tab active based on date
+document.querySelectorAll('.major-tab').forEach(t => t.classList.remove('active'));
+document.getElementById('tab-' + currentMajor).classList.add('active');
+document.getElementById('purseDisplay').textContent = '$' + MAJORS[currentMajor].purse.toLocaleString();
+updateRoundDots(MAJORS[currentMajor]);
+const initStatus = MAJORS[currentMajor].status === 'live' ? 'Round ' + MAJORS[currentMajor].round + ' In Progress'
+  : MAJORS[currentMajor].status === 'complete' ? 'Final'
+  : 'Upcoming · ' + MAJORS[currentMajor].dates;
+document.getElementById('majorStatusDisplay').textContent = initStatus;
+
+renderLeaderboard();
+renderField();
+renderPicks();
+renderSeason();
+
+// Kick off live sync after a short delay to let the page settle
+setTimeout(startLiveSync, 800);
+</script>
+</body>
+</html>
